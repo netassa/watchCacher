@@ -14,37 +14,100 @@
         android:id="@+id/openQrCodeScan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dencode_qrcode"
-        />
-    <TextView
-        android:id="@+id/qrCodeText"
-        android:layout_below="@id/openQrCodeScan"
+        android:text="@string/dencode_qrcode" />
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:text="@string/qrcodetext"/>
-    <EditText
-        android:id="@+id/text"
-        android:layout_below="@id/qrCodeText"
+        android:id="@+id/layout"
+        android:layout_below="@+id/openQrCodeScan">
+
+        <TextView
+            android:id="@+id/qrCodeText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:text="@string/qrcodetext"/>
+
+        <EditText
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/device"
+            android:id="@+id/device"/>
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:hint="@string/code_text"/>
+        android:layout_below="@id/layout"
+        android:id="@+id/layout_1">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/insert"
+            android:text="@string/insert"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete"
+            android:text="@string/delete"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete_all"
+            android:text="@string/delete_all"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/preview"
+            android:text="@string/preview"/>
+
+    </LinearLayout>
+
+
     <Button
-        android:id="@+id/CreateQrCode"
-        android:layout_below="@id/text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/encode_qrcode"
-        />
+        android:layout_below="@+id/layout_1"
+        android:id="@+id/export"
+        android:text="@string/export" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/export"
+        android:id="@+id/layout_2">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/takePhoto"
+            android:text="@string/take_photo"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/query"
+            android:text="@string/query"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/getCount"
+            android:text="@string/count"/>
+
+    </LinearLayout>
+
     <ImageView
-        android:id="@+id/QrCode"
-        android:layout_below="@id/CreateQrCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:paddingTop="10dp"
-        android:src="@mipmap/ic_launcher"/>
+        android:id="@+id/imageView"
+        android:contentDescription="@string/image"
+        android:layout_below="@+id/layout_2"/>
 </RelativeLayout>
