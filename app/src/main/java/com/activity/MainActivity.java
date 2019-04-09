@@ -8,12 +8,13 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,8 +23,13 @@ import com.google.zxing.activity.CaptureActivity;
 import com.qrcodescan.R;
 import com.utils.CommonUtil;
 
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.concurrent.FutureTask;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +41,10 @@ public class MainActivity extends AppCompatActivity {
     Button openQrCodeScan;
     @BindView(R.id.qrCodeText)
     TextView qrCodeText;
+    @BindView(R.id.imeiText)
+    TextView imeiText;
+    @BindView(R.id.deviceText)
+    TextView deviceTesxt;
 
     //打开扫描界面请求码
     private static final int REQUEST_CODE = 0x01;
@@ -45,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
     @BindView(R.id.imageView)
     ImageView imageView;
-    @BindView(R.id.device)
-    EditText deviceText;
     private SQLiteDatabase database;
     private MyDBOpenHelper myDBOpenHelper;
     private Context context;
@@ -54,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     Uri photoUri;
     File file;
     int tempNum;
+    String response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,14 +94,14 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.insert:
-                String device = deviceText.getText() + "";
+                String IMEI = imeiText.getText() + "";
+                String device = deviceTesxt.getText() + "";
                 String watchId = qrCodeText.getText() + "";
-                String IMEI = "jfldjfld";
                 String num =  tempNum + "#";
                 String[] str = {device, num, watchId, IMEI};
                 LogUtils.i(TAG, "Test");
                 if(device.isEmpty()) {
-                    Toast.makeText(context, "请输入机型", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "机型为空", Toast.LENGTH_LONG).show();
                 } else if(watchId.equals(getText(R.string.qrcodetext) + "")) {
                     Toast.makeText(context, "绑定号为空", Toast.LENGTH_LONG).show();
                 } else if(IMEI.isEmpty()) {
@@ -101,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
                     tempNum++;
                     SqlMethod.insert(context, database, Config.tableName, str);
                     PublicMethod.writePreferenceInt(context, "tempNum", tempNum);
-                    Toast.makeText(context, "插入完毕", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "保存成功", Toast.LENGTH_LONG).show();
                 }
                 break;
             case R.id.query:
@@ -171,11 +180,26 @@ public class MainActivity extends AppCompatActivity {
             case REQUEST_CODE:
                 //扫描结果回调
                 if (resultCode == RESULT_OK) { //RESULT_OK = -1
-                    Bundle bundle = data.getExtras();
+                    final Bundle bundle = data.getExtras();
                     String scanResult = bundle.getString("qr_scan_result");
                     //将扫描出的信息显示出来
                     String temp[] = scanResult.split("/");
-                    qrCodeText.setText(temp[temp.length - 1]);
+                    final String watchId = temp[temp.length - 1];
+                    qrCodeText.setText(watchId);
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            String url = "http://watch.okii.com/smartwatch/watchaccount/bindnumber/" + watchId;
+                            LogUtils.i(TAG, url);
+                            response = GetImei.sendGet(url, watchId);
+                            Message message = new Message();
+                            message.what = 0x1;
+                            Bundle bundle1 = new Bundle();
+                            bundle.putString("response", response);
+                            message.setData(bundle);
+                            handler.sendMessage(message);
+                        }
+                    }.start();
                 }
                 break;
             case REQUST_CODE_TAKE_PICTURE_URI:
@@ -189,4 +213,32 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
+    public Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case 0x1:
+                    String response = message.getData().getString("response");
+                    LogUtils.i(TAG, response);
+                    String imei = "";
+                    String device = "";
+                    try {
+                        JSONObject jsonObject = new JSONObject(response);
+                        String data = jsonObject.getString("data");
+                        JSONObject jsonObject1 = new JSONObject(data);
+                        imei = jsonObject1.getString("imei");
+                        device = jsonObject1.getString("model");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    imeiText.setText(imei);
+                    deviceTesxt.setText(device);
+                    break;
+            }
+        }
+
+    };
 }
+
+
+

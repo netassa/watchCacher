@@ -2,6 +2,7 @@
     <string name="app_name">QrCodeScan</string>
     <string name="dencode_qrcode">扫描二维码</string>
     <string name="qrcodetext">这里显示绑定号</string>
+    <string name="imei_text">这里显示IMEI</string>
     <string name="export">一键导出</string>
     <string name="insert">保存</string>
     <string name="query">查询数据</string>
@@ -12,4 +13,5 @@
     <string name="take_photo">拍照</string>
     <string name="image">这里显示IMEI</string>
     <string name="device">请输入机型</string>
+    <string name="device_test">这里显示机型</string>
 </resources>
