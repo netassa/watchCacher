@@ -11,6 +11,7 @@ public class GetImei {
     private static final String TAG = "GetImei";
 
     public static String sendGet(String url, String watchId) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         String result = "";
         String urlName = url;
         BufferedReader in = null;
@@ -24,7 +25,6 @@ public class GetImei {
             connection.setRequestProperty("Eebbk-Sign", "9BC3EDFB13FE064731FFBCE94BABADDA");
             connection.setRequestProperty("Version", "W_2.80");
             connection.setRequestProperty("grey", "619386");
-            connection.setRequestProperty("cache-control", "no-cache");
             connection.connect();
             in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             String line;

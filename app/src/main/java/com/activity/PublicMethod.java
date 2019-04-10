@@ -24,6 +24,7 @@ public class PublicMethod {
     private static String defaultFileName = Config.defaultDir;
     private static Format format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.CHINESE);
     public static void writeToExcel(String[][] str) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         WritableWorkbook book;
         try {
             book = Workbook.createWorkbook(new File(defaultFileName + format.format(new Date()) + "_IMEI.xls"));
@@ -49,6 +50,7 @@ public class PublicMethod {
     }
 
     public static File getSavePhotoFile() {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         String photoPath = Config.defaultDir + "/camera/" + format.format(new Date()) + ".jpg";
         File file = new File(photoPath);
         if(!file.getParentFile().exists()) {
@@ -58,11 +60,13 @@ public class PublicMethod {
     }
 
     public static String getPreferenceString(Context context, String name) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         SharedPreferences preferences = context.getSharedPreferences("codeScan", Context.MODE_PRIVATE);
         return preferences.getString(name, null);
     }
 
     public static int  getPreferenceInt(Context context, String name) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         SharedPreferences preferences = context.getSharedPreferences("codeScan", Context.MODE_PRIVATE);
         if(name.equals("tempNum")) {
             return preferences.getInt(name, 1);
@@ -71,12 +75,14 @@ public class PublicMethod {
     }
 
     public static void writePreferenceString(Context context, String name, String value) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         SharedPreferences preferences = context.getSharedPreferences("codeScan", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(name, value);
         editor.commit();
     }
     public static void writePreferenceInt(Context context, String name, int value) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName() + ", name:" + name + ", value" + value);
         SharedPreferences preferences = context.getSharedPreferences("codeScan", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(name, value);
@@ -84,6 +90,7 @@ public class PublicMethod {
     }
 
     public static void disableAPIDialog() {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         if (Build.VERSION.SDK_INT < 28) return;
         try {
             Class clazz = Class.forName("android.app.ActivityThread");

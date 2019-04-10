@@ -18,6 +18,7 @@ public class SqlMethod {
     }
 
     public static void insert(Context context, SQLiteDatabase database, String table, String[] str) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         rowNum = PublicMethod.getPreferenceInt(context, "rowNum");
         rowNum++;
         PublicMethod.writePreferenceInt(context, "rowNum", rowNum);
@@ -34,6 +35,7 @@ public class SqlMethod {
     }
 
     public static String[] query(SQLiteDatabase database, String table, int rowNum) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         LogUtils.i(TAG, "query");
         Cursor cursor = database.query(table, null, "rowNum=?",
                 new String[]{Integer.toString(rowNum)}, null, null, null);
@@ -50,10 +52,11 @@ public class SqlMethod {
     }
 
     public static String[][] queryAll(SQLiteDatabase database, String table) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         Cursor cursor = database.query(table, null, null,
                 null, null, null, null);
         int count = (int)getCount(database, table);
-        LogUtils.i(TAG, Integer.toString(count));
+        LogUtils.i(TAG, "count:" + count);
         String[][] str = new String[count][4];
         if (cursor.moveToFirst()) {
             for(int i = 0; i < count; i++) {
@@ -65,19 +68,20 @@ public class SqlMethod {
             }
         }
         cursor.close();
-        LogUtils.i(TAG, Integer.toString(str.length));
         return str;
     }
 
     public static void delete(Context context, SQLiteDatabase database, String table, int rowNum) {
-            String sql = "DELETE FROM " + table + " WHERE rowNum = " + rowNum;
-            SqlMethod.rowNum--;
-            LogUtils.i(TAG, Integer.toString(SqlMethod.rowNum));
-            PublicMethod.writePreferenceInt(context, "rowNum", SqlMethod.rowNum);
-            database.execSQL(sql);
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
+        String sql = "DELETE FROM " + table + " WHERE rowNum = " + rowNum;
+        SqlMethod.rowNum--;
+        LogUtils.i(TAG, "rowNum:" + SqlMethod.rowNum);
+        PublicMethod.writePreferenceInt(context, "rowNum", SqlMethod.rowNum);
+        database.execSQL(sql);
     }
 
     public static long getCount(SQLiteDatabase database, String table) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         String sql = "SELECT COUNT (*) FROM " + table;
         Cursor cursor =  database.rawQuery("SELECT COUNT (*) FROM " + table,null);
         cursor.moveToFirst();
@@ -87,6 +91,7 @@ public class SqlMethod {
     }
 
     public static void deleteAll(Context context, SQLiteDatabase database, String table) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         String sql = "DELETE FROM " + table;
         database.execSQL(sql);
         rowNum = 0;

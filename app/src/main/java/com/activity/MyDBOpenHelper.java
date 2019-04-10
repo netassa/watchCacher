@@ -13,6 +13,7 @@ public class MyDBOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         String sql = "CREATE TABLE " + Config.tableName + "(id INTEGER PRIMARY KEY AUTOINCREMENT, rowNum INTEGER, device VARCHAR(10) DEFAULT 'Z5', " +
                 "num VARCHAR(10), watchId VARCHAR(20), IMEI VARCHAR(20))";
         LogUtils.i(TAG, "create");
@@ -21,5 +22,6 @@ public class MyDBOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
     }
 }

@@ -90,36 +90,36 @@
         android:id="@+id/export"
         android:text="@string/export" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/export"
-        android:id="@+id/layout_2">
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/export"-->
+        <!--android:id="@+id/layout_2">-->
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/takePhoto"
-            android:text="@string/take_photo"/>
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/takePhoto"-->
+            <!--android:text="@string/take_photo"/>-->
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/query"
-            android:text="@string/query"/>
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/query"-->
+            <!--android:text="@string/query"/>-->
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/getCount"
-            android:text="@string/count"/>
+        <!--<Button-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:id="@+id/getCount"-->
+            <!--android:text="@string/count"/>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/imageView"
-        android:contentDescription="@string/image"
-        android:layout_below="@+id/layout_2"/>
+    <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:id="@+id/imageView"-->
+        <!--android:contentDescription="@string/image"-->
+        <!--android:layout_below="@+id/layout_2"/>-->
 </RelativeLayout>

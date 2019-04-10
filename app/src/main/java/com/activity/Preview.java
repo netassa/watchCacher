@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 
 
 public class Preview extends AppCompatActivity {
+    private static final String TAG = "Preview";
     @BindView(R.id.table)
     SmartTable table;
     private SQLiteDatabase database;
@@ -27,6 +28,7 @@ public class Preview extends AppCompatActivity {
     @Override
     @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState) {
+        LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);
         ButterKnife.bind(this);
