@@ -40,7 +40,7 @@ public class LogUtils {
         try {
             PrintStream printStream = new PrintStream(new FileOutputStream(defaultFileName,true));
             System.setOut(printStream);
-            System.out.println(format.format(new Date()) + ":" + message);
+            System.out.println(format.format(new Date()) + "  " + level.substring(0, 1).toUpperCase() + "/" + TAG + ":" + message);
             System.setOut(out);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
