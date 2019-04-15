@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     int tempNum;
     String response;
 
-    private String[] permissions = {Manifest.permission.CAMERA};
+    private String[] permissions = {Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +81,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int i = ContextCompat.checkSelfPermission(this, permissions[0]);
-            if(i != PackageManager.PERMISSION_GRANTED) {
-                showDialogTipUserRequestPermission();
+            int flag = 0;
+            for (int i = 0; i < permissions.length; i++) {
+                int j = ContextCompat.checkSelfPermission(this, permissions[i]);
+                if (j != PackageManager.PERMISSION_GRANTED) {
+                    flag = 1;
+                }
+            }
+            if(flag == 1) {
+                startRequestPermission();
             }
         }
 
@@ -226,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                     new Thread() {
                         @Override
                         public void run() {
-                            String url = "http://watch.module.okii.com/smartwatch/watchaccount/bindnumber/" + watchId;
+                            String url = "http://watch.okii.com/smartwatch/watchaccount/bindnumber/" + watchId;
                             LogUtils.i(TAG, url);
                             response = GetImei.sendGet(url, watchId);
                             Message message = new Message();
@@ -280,26 +286,6 @@ public class MainActivity extends AppCompatActivity {
 
     };
 
-
-
-    private void showDialogTipUserRequestPermission() {
-        new AlertDialog.Builder(this)
-                .setTitle("摄像头不可用")
-                .setMessage("APP需要摄像头权限")
-                .setPositiveButton("立即开启", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        startRequestPermission();
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        finish();
-                    }
-                }).setCancelable(false).show();
-    }
-
     private void startRequestPermission() {
         ActivityCompat.requestPermissions(this, permissions, 111);
     }
@@ -309,8 +295,15 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case 111:
+                int flag = 0;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if(grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    for (int i = 0; i < grantResults.length; i ++ ) {
+                        if(grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                            flag = 1;
+                        }
+                    }
+                    if(flag == 1) {
+                        finish();
                     } else {
                         Toast.makeText(this, "权限获取成功", Toast.LENGTH_LONG).show();
                     }
