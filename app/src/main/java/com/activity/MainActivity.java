@@ -2,17 +2,25 @@ package com.activity;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.StrictMode;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -34,6 +42,7 @@ import java.io.FileNotFoundException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import android.Manifest;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -64,10 +73,20 @@ public class MainActivity extends AppCompatActivity {
     int tempNum;
     String response;
 
+    private String[] permissions = {Manifest.permission.CAMERA};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            int i = ContextCompat.checkSelfPermission(this, permissions[0]);
+            if(i != PackageManager.PERMISSION_GRANTED) {
+                showDialogTipUserRequestPermission();
+            }
+        }
+
         PublicMethod.disableAPIDialog();
         ButterKnife.bind(this);
         context = MainActivity.this;
@@ -104,18 +123,18 @@ public class MainActivity extends AppCompatActivity {
                 String num =  tempNum + "#";
                 LogUtils.i(TAG, "IMEI:" + IMEI + ", device:" + device + ", watchId:" + ", num:" + num );
                 String[] str = {device, num, watchId, IMEI};
-                if(device.isEmpty()) {
-                    Toast.makeText(context, "机型为空", Toast.LENGTH_LONG).show();
-                } else if(watchId.equals(getText(R.string.qrcodetext) + "")) {
-                    Toast.makeText(context, "绑定号为空", Toast.LENGTH_LONG).show();
-                } else if(IMEI.isEmpty()) {
-                    Toast.makeText(context, "IMEI为空", Toast.LENGTH_LONG).show();
-                } else {
+//                if(device.isEmpty()) {
+//                    Toast.makeText(context, "机型为空", Toast.LENGTH_LONG).show();
+//                }  else if(watchId.equals(getText(R.string.qrcodetext) + "")) {
+//                    Toast.makeText(context, "绑定号为空", Toast.LENGTH_LONG).show();
+//                } else if(IMEI.isEmpty()) {
+//                    Toast.makeText(context, "IMEI为空", Toast.LENGTH_LONG).show();
+//                } else {
                     tempNum++;
                     SqlMethod.insert(context, database, Config.tableName, str);
                     PublicMethod.writePreferenceInt(context, "tempNum", tempNum);
                     Toast.makeText(context, "保存成功", Toast.LENGTH_LONG).show();
-                }
+                //}
                 break;
             case R.id.export:
                 LogUtils.i(TAG, "export");
@@ -212,9 +231,9 @@ public class MainActivity extends AppCompatActivity {
                             response = GetImei.sendGet(url, watchId);
                             Message message = new Message();
                             message.what = 0x1;
-                            Bundle bundle1 = new Bundle();
-                            bundle.putString("response", response);
-                            message.setData(bundle);
+                            Bundle responseBundle = new Bundle();
+                            responseBundle.putString("response", response);
+                            message.setData(responseBundle);
                             handler.sendMessage(message);
                         }
                     }.start();
@@ -260,6 +279,44 @@ public class MainActivity extends AppCompatActivity {
         }
 
     };
+
+
+
+    private void showDialogTipUserRequestPermission() {
+        new AlertDialog.Builder(this)
+                .setTitle("摄像头不可用")
+                .setMessage("APP需要摄像头权限")
+                .setPositiveButton("立即开启", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        startRequestPermission();
+                    }
+                })
+                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        finish();
+                    }
+                }).setCancelable(false).show();
+    }
+
+    private void startRequestPermission() {
+        ActivityCompat.requestPermissions(this, permissions, 111);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode) {
+            case 111:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    if(grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+                    } else {
+                        Toast.makeText(this, "权限获取成功", Toast.LENGTH_LONG).show();
+                    }
+                }
+        }
+    }
 }
 
 
