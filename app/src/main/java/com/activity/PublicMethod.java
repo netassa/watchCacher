@@ -22,7 +22,7 @@ import jxl.write.WriteException;
 public class PublicMethod {
     private static final String TAG = "PublicMethod";
     private static String defaultFileName = Config.defaultDir;
-    private static Format format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss", Locale.CHINESE);
+    private static Format format = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss", Locale.CHINESE);
     public static void writeToExcel(String[][] str) {
         LogUtils.i(TAG, Thread.currentThread().getStackTrace()[2].getMethodName());
         WritableWorkbook book;

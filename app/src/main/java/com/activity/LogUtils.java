@@ -2,6 +2,7 @@ package com.activity;
 
 import android.util.Log;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.PrintStream;
@@ -38,7 +39,11 @@ public class LogUtils {
     private static void print(String level, String TAG, String message) {
         PrintStream out = System.out;
         try {
-            PrintStream printStream = new PrintStream(new FileOutputStream(defaultFileName,true));
+            File file = new File(defaultFileName);
+            if(!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            PrintStream printStream = new PrintStream(new FileOutputStream(file,true));
             System.setOut(printStream);
             System.out.println(format.format(new Date()) + "  " + level.substring(0, 1).toUpperCase() + "/" + TAG + ":" + message);
             System.setOut(out);
