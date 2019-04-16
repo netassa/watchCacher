@@ -13,6 +13,31 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+//    android.applicationVariants.all {
+//        variant ->
+//            variant.outputs.all {
+//                if(variant.buildType.name.equals('debug')){
+//                    outputFileName = "统计IMEI-debug.apk"
+//                } else if(variant.buildType.name.equals('release')){
+//                    outputFileName = "统计IMEI.apk"
+//                }
+//            }
+//    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.each { output ->
+            def outputFile = output.outputFile
+            def fileName
+            if(variant.buildType.name.equals('debug')){
+                fileName = "获取IMEI_debug.apk"
+            } else if (variant.buildType.name.equals('release')){
+                fileName = "获取IMEI_release.apk"
+            }
+            output.outputFile = new File(outputFile.parent, fileName)
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
